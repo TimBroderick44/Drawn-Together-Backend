@@ -1,0 +1,26 @@
+-- Drop existing tables
+DROP TABLE IF EXISTS games;
+DROP TABLE IF EXISTS user_details;
+DROP TABLE IF EXISTS users;
+
+CREATE TABLE IF NOT EXISTS users (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS user_details (
+    user_id BIGINT NOT NULL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE IF NOT EXISTS games (
+    game_id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    player1_id BIGINT NOT NULL,
+    player2_id BIGINT NOT NULL,
+    score INT NOT NULL,
+    FOREIGN KEY (player1_id) REFERENCES users(id),
+    FOREIGN KEY (player2_id) REFERENCES users(id)
+);
