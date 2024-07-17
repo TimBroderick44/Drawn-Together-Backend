@@ -38,22 +38,15 @@ public class AuthController {
     @PostMapping("/authenticate")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthRequestDTO authRequest) throws Exception {
         try {
-            // .authenticate() method will authenticate the user and throw an exception if
-            // the user is not authenticated
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
         } catch (BadCredentialsException e) {
-            return ResponseEntity.status(401).body("Incorrect username or password");
+            return ResponseEntity.status(401).body("...Forgotten your details?");
         } catch (Exception e) {
             return ResponseEntity.status(500).body("An error occurred while processing the request");
         }
 
-        // userAuth is the username and password
-        // userDetail is the user's name and email
-        // The response will be returned with the JWT (and therefore the username), name and email so that they can be used in the frontend
-
         final UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getUsername());
-        // Generate the JWT token with the user details
         final String jwt = jwtUtil.generateToken(userDetails);
 
         Optional<UserAuth> userAuth = userAuthRepo.findByUsername(userDetails.getUsername());

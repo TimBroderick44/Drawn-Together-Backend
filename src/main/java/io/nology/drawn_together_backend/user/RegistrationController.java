@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import io.nology.drawn_together_backend.errorhandling.RegistrationException;
+
 @RestController
 @RequestMapping("/auth")
 public class RegistrationController {
@@ -13,11 +15,11 @@ public class RegistrationController {
 
   @PostMapping("/register")
   public ResponseEntity<?> registerUser(@RequestBody RegistrationRequestDTO registrationRequest) {
-    String result = registrationService.registerUser(registrationRequest);
-    if (result.equals("User registered successfully")) {
+    try {
+      String result = registrationService.registerUser(registrationRequest);
       return ResponseEntity.ok(result);
-    } else {
-      return ResponseEntity.status(400).body(result);
+    } catch (RegistrationException e) {
+      return ResponseEntity.status(400).body(e.getMessage());
     }
   }
 }

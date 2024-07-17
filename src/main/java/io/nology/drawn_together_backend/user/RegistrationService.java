@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import io.nology.drawn_together_backend.errorhandling.RegistrationException;
+
 @Service
 public class RegistrationService {
 
@@ -18,11 +20,11 @@ public class RegistrationService {
 
   public String registerUser(RegistrationRequestDTO registrationRequest) {
     if (userAuthRepo.findByUsername(registrationRequest.getUsername()).isPresent()) {
-      return "Username already taken";
+      throw new RegistrationException("Username is already taken");
     }
 
     if (userDetailRepo.findByEmail(registrationRequest.getEmail()).isPresent()) {
-      return "Email already registered";
+      throw new RegistrationException("Email is already registered");
     }
 
     UserAuth userAuth = new UserAuth();
